@@ -1,0 +1,48 @@
+ <!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Gacha Import (MVP)</title>
+</head>
+<body style="font-family: Arial; padding: 24px;">
+  <h2>Paste your webview_gacha link</h2>
+  <textarea id="link" rows="3" style="width:100%" placeholder="Paste link here"></textarea>
+  <br/><br/>
+  <label>Region:
+    <select id="region">
+      <option value="global" selected>global</option>
+      <option value="china">china</option>
+    </select>
+  </label>
+  <button id="btn">Fetch pulls</button>
+  <p id="status"></p>
+  <pre id="out" style="white-space:pre-wrap; background:#f2f2f2; padding:12px; border-radius:6px;"></pre>
+
+<script>
+document.getElementById('btn').onclick = async () => {
+  const authkey_url = document.getElementById('link').value.trim();
+  const region = document.getElementById('region').value;
+  document.getElementById('status').innerText = 'Fetching...';
+  document.getElementById('out').innerText = '';
+  try {
+    const res = await fetch('/api/fetch', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({authkey_url, region})
+    });
+    const j = await res.json();
+    if (!res.ok) {
+      document.getElementById('status').innerText = 'Error';
+      document.getElementById('out').innerText = JSON.stringify(j, null, 2);
+    } else {
+      document.getElementById('status').innerText = 'Success';
+      document.getElementById('out').innerText = JSON.stringify(j.result, null, 2);
+    }
+  } catch (e) {
+    document.getElementById('status').innerText = 'Network error';
+    document.getElementById('out').innerText = String(e);
+  }
+}
+</script>
+</body>
+</html>
