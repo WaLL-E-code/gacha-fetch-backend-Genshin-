@@ -1,0 +1,23 @@
+<!doctype html>
+<title>Fetch Gacha</title>
+<style>
+  body{font-family:system-ui;margin:24px}
+  input,button{padding:10px;border-radius:12px;border:1px solid #ddd}
+  button{box-shadow:0 4px 12px rgba(0,0,0,.08);cursor:pointer}
+  #out{white-space:pre-wrap;margin-top:16px}
+</style>
+<h1>Fetch Gacha</h1>
+<input id="url" placeholder="Paste full authkey URL" style="width:520px">
+<button onclick="go()">Fetch</button>
+<div id="out"></div>
+<script>
+async function go(){
+  const res = await fetch("/api/fetch",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({url:document.getElementById('url').value})
+  });
+  document.getElementById('out').textContent =
+    JSON.stringify(await res.json(),null,2);
+}
+</script>
